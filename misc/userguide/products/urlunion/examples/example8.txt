@@ -1,0 +1,15 @@
+Version Number	Change
+1.17	Added an option to parse HTML into tab-delimited records. The first option available reads bookmark files that use multiple, indented lists to indicate the organization of the bookmarks. This is the format used by URL Manager, for example.
+1.17	Modified script files to make file names relative to the location of the script file itself, where file names are within the same folder. This should make script files more portable.
+1.16	Now available for execution under Mac OS X.
+1.16	Added scroll bars to output text areas on Log and Script tabs.
+1.16	Added a logging option that sends log data to the text area on the Log tab.
+1.16	Added three new group commands to allow template lines to be written out before and after control breaks in up to ten different key fields.
+1.15	Corrected bug that caused results of IF comparisons to be reversed.
+1.15	Modified Script playback file to use same log file settings as the rest of the program.
+1.15	Corrected program logic so that global variable values would not be confused with data record values.
+1.15	Created PSTextMerge icons.
+1.15	Corrected bug that caused last row of input data to be skipped when using a template to generate an output file.
+1.14	Modified so that the output script dictionary would use the same log and log settings as the rest of the program.
+1.14	Corrected an exception that occurred when running as an applet with an initial scriptfile.
+1.12	Added check in dictionary read routine to skip blank lines in the input file.

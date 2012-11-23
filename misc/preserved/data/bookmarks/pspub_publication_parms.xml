@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>com.powersurgepub.pspub.PublishWindow properties</comment>
+<entry key="publish-template">Favorites Plus</entry>
+<entry key="publish-script">/Volumes/hbowie/Sites/bookmarks/html_gen.tcz</entry>
+<entry key="publish-when">On Save</entry>
+<entry key="publish-url">http://homepage.mac.com/hbowie/bookmarks</entry>
+<entry key="publish-templates">/Users/hbowie/Java/projects/apps/URL Union/mac/URL Union Folder/URL Union.app/Contents/Resources/appfolder/templates</entry>
+<entry key="publish-to">/Volumes/hbowie/Sites/bookmarks</entry>
+</properties>

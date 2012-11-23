@@ -1,0 +1,16 @@
+module	action	modifier	object	value
+input	open	html2		#PATH#example9.html
+input	set		dirdepth	2
+input	open	dir	merge	#PATH#example9_folder
+filter	add	not equal to	Type	Directory
+filter	add	greater than	File Name	.Z
+filter	set		params	
+sort	add	Ascending	Folder1	
+sort	add	Ascending	File Name	
+sort	set		params	
+combine	add		dataloss	1
+combine	add		precedence	1
+combine	add		minnoloss	0
+combine	set		params	
+template	open	file		#PATH#example9_template.html
+template	generate			

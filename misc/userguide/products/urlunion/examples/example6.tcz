@@ -1,0 +1,17 @@
+module	action	modifier	object	value
+input	open	file		#PATH#changes.txt
+output	set		usedict	true
+output	open			#PATH#example6.txt
+output	set		usedict	false
+input	open	file		#PATH#example6.dic
+template	open	file		#PATH#example6_index_meta_template.html
+template	generate			
+template	open	file		#PATH#example6_page_meta_template.html
+template	generate			
+input	open	file		#PATH#changes.txt
+sort	add	Ascending	Change Number	
+sort	set		params	
+template	open	file		#PATH#example6_page_template.html
+template	generate			
+template	open	file		#PATH#example6_index_template.html
+template	generate			

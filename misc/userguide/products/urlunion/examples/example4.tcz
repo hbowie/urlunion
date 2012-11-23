@@ -1,0 +1,4 @@
+module	action	modifier	object	value
+input	open	dir		#PATH#
+template	open	file		#PATH#example4_template.html
+template	generate			

@@ -1,0 +1,12 @@
+module	action	modifier	object	value
+input	open	file		#PATH#bookmarks.txt
+sort	add	Ascending	Category 1	
+sort	add	Ascending	Category 2	
+sort	add	Ascending	Category 3	
+sort	add	Ascending	Category 4	
+sort	add	Ascending	Company and Department	
+sort	set		params	
+template	open	file		#PATH#example3a_index_template.html
+template	generate			
+template	open	file		#PATH#example3_page_template.html
+template	generate			

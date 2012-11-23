@@ -1,0 +1,9 @@
+module	action	modifier	object	value
+input	open	file		#PATH#changes.txt
+filter	add	equals	Done?	Y
+filter	set		params	
+sort	add	Descending	Version Implemented	
+sort	add	Ascending	Change Number	
+sort	set		params	
+template	open	file		#PATH#example1_template.html
+template	generate			

@@ -1,0 +1,10 @@
+module	action	modifier	object	value
+input	open	html1		#PATH#example2.html
+sort	add	Ascending	Category 1	
+sort	add	Ascending	Category 2	
+sort	add	Ascending	Category 3	
+sort	add	Ascending	Category 4	
+sort	add	Ascending	Description	
+sort	set		params	
+template	open	file		#PATH#example5_template.html
+template	generate			

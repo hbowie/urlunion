@@ -1,0 +1,12 @@
+Proper Name	Common Name	Alias For	Data Format Rule	Combine by Appending?
+Change Number	changenumber		DataFormatRule	false
+Done?	done		DataFormatRule	false
+Version Implemented	versionimplemented		DataFormatRule	false
+Date Completed	datecompleted		DataFormatRule	false
+Priority	priority		DataFormatRule	false
+Date Requested	daterequested		DataFormatRule	false
+Requested By	requestedby		DataFormatRule	false
+E-mail	email		DataFormatRule	false
+Problem/Change Request	problemchangerequest		DataFormatRule	false
+Resolution	resolution		DataFormatRule	false
+Reference	reference		DataFormatRule	false

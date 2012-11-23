@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>com.powersurgepub.pspub.PublishWindow properties</comment>
+<entry key="publish-to-0">/Volumes/hbowie/Sites/bookmarks</entry>
+</properties>

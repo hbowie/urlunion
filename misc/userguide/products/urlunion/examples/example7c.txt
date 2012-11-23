@@ -1,0 +1,5 @@
+Last Name	First Name	E-Mail	Home Phone
+Jones	Sally		555-562-8216
+Jones	Stephen	stevejones@mac.com	444-451-9327
+Smith	Joe	joesmith@mac.com	
+Wagner	Mary	marywagner@mac.com	666-673-7105

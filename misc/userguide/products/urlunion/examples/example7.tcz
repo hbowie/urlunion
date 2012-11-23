@@ -1,0 +1,11 @@
+module	action	modifier	object	value
+input	open	file		#PATH#example7a.txt
+input	open	file	merge	#PATH#example7b.txt
+sort	add	Ascending	Last Name	
+sort	add	Ascending	First Name	
+sort	set		params	
+combine	add		dataloss	0
+combine	add		precedence	1
+combine	add		minnoloss	0
+combine	set		params	
+output	open			#PATH#example7c.txt
