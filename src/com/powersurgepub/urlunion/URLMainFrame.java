@@ -1,3 +1,19 @@
+/*
+ * Copyright 1999 - 2013 Herb Bowie
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.powersurgepub.urlunion;
 
   import com.powersurgepub.psfiles.*;
@@ -5,7 +21,6 @@ package com.powersurgepub.urlunion;
   import com.powersurgepub.psdatalib.pstags.*;
   import com.powersurgepub.pspub.*;
   import com.powersurgepub.psutils.*;
-  import com.powersurgepub.regcodes.*;
   import com.powersurgepub.urlvalidator.*;
   import com.powersurgepub.xos2.*;
   import java.awt.*;
@@ -35,7 +50,7 @@ public class URLMainFrame extends javax.swing.JFrame
       XHandler {
 
   public static final String PROGRAM_NAME    = "URL Union";
-  public static final String PROGRAM_VERSION = "1.20b1";
+  public static final String PROGRAM_VERSION = "2.00a1";
 
   public static final int    CHILD_WINDOW_X_OFFSET = 60;
   public static final int    CHILD_WINDOW_Y_OFFSET = 60;
@@ -147,12 +162,6 @@ public class URLMainFrame extends javax.swing.JFrame
   private             boolean             outlineWritten = false;
   private             boolean             indexWritten = false;
 
-  // Registration variables
-  private             RegisterWindow      registerWindow;
-  private             UnregisteredWindow  unregisteredWindow;
-  private static final int    DEMO_LIMIT    = 20;
-  private             RegistrationCode    registrationCode;
-
   /** Creates new form URLMainFrame */
   public URLMainFrame() {
     appster = new Appster
@@ -166,9 +175,6 @@ public class URLMainFrame extends javax.swing.JFrame
     getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
     WindowMenuManager.getShared(windowMenu);
     currentDirectory = fileChooser.getCurrentDirectory();
-
-    // Set up registration window
-    RegisterWindow.getShared().setStatusBar (statusBar);
 
     // Set About, Quit and other Handlers in platform-specific ways
     xos.setFileMenu (fileMenu);
@@ -248,7 +254,7 @@ public class URLMainFrame extends javax.swing.JFrame
         false);
     }
 
-    aboutWindow = new AboutWindow();
+    aboutWindow = new AboutWindow(false);
 
     publishWindow = new PublishWindow(this);
     publishWindow.setOnSaveOption(true);
@@ -256,9 +262,6 @@ public class URLMainFrame extends javax.swing.JFrame
 
     collectionWindow = new CollectionWindow();
     replaceWindow = new ReplaceWindow(this);
-
-    registerWindow = RegisterWindow.getShared();
-    registerWindow.setDemoLimit(DEMO_LIMIT);
 
     // Get System Properties
     userName = System.getProperty ("user.name");
@@ -319,8 +322,6 @@ public class URLMainFrame extends javax.swing.JFrame
 
     CommonPrefs.getShared().appLaunch();
 
-    checkUnregistered();
-
   }
 
   public boolean preferencesAvailable() {
@@ -341,14 +342,10 @@ public class URLMainFrame extends javax.swing.JFrame
 
     modIfChanged();
 
-    if (urls.roomForMore()) {
-      position = new URLPositioned();
-      position.setIndex (urls.size());
-      displayURL();
-      tagsTextSelector.setText (selectedTags);
-    } else {
-      handleRegistrationLimitation();
-    }
+    position = new URLPositioned();
+    position.setIndex (urls.size());
+    displayURL();
+    tagsTextSelector.setText (selectedTags);
   }
 
   /**
@@ -996,13 +993,9 @@ public class URLMainFrame extends javax.swing.JFrame
   } // end modIfChanged method
 
   private void addURL () {
-    if (urls.roomForMore()) {
-      position = urls.add (position.getURLPlus());
-      if (position.hasValidIndex (urls)) {
-        positionAndDisplay();
-      }
-    } else {
-      handleRegistrationLimitation();
+    position = urls.add (position.getURLPlus());
+    if (position.hasValidIndex (urls)) {
+      positionAndDisplay();
     }
   }
 
@@ -1121,6 +1114,20 @@ public class URLMainFrame extends javax.swing.JFrame
       openFile (urlFile);
       position = savePosition;
       positionAndDisplay();
+    }
+  }
+  
+  private void clearFile() {
+    modIfChanged();
+    int option = JOptionPane.showConfirmDialog(this, 
+        "Are you sure you want to delete the entire contents of the current list?");
+    if (option == JOptionPane.YES_OPTION) {
+      noFindInProgress();
+      initCollection();
+      collectionWindow.setURLs (urls);
+      urls.fireTableDataChanged();
+      setPreferredCollectionView();
+      addFirstURL();
     }
   }
 
@@ -1243,9 +1250,6 @@ public class URLMainFrame extends javax.swing.JFrame
 
   private void readFileContents (File inFile) {
     io.read (inFile, urls);
-    if (io.wasDemoLimitExceeded()) {
-      handleRegistrationLimitation();
-    }
   }
 
   private void closeFile() {
@@ -1808,59 +1812,6 @@ public class URLMainFrame extends javax.swing.JFrame
     tips.toFront();
   }
 
-  /**
-   If the program hasn't been registered, then remind the user upon application
-   launch.
-   */
-  private void checkUnregistered() {
-    if (! RegisterWindow.getShared().isRegistered()) {
-        unregisteredWindow
-            = new UnregisteredWindow(
-            "You may continue to use it in demo mode for as long as you like, "
-            + "but the program will save no more than 20 URLs "
-            + "until it is registered.");
-        int w = this.getWidth();
-        int h = this.getHeight();
-        int x = this.getX();
-        int y = this.getY();
-        unregisteredWindow.setLocation(
-            x + ((w - unregisteredWindow.getWidth()) / 2),
-            y + ((h - unregisteredWindow.getHeight()) / 2));
-        WindowMenuManager.getShared().makeVisible(unregisteredWindow);
-    }
-  }
-
-  /**
-   Help the user purchase a software license for URL Union.
-   */
-  private void purchase () {
-    openURL (UnregisteredWindow.STORE);
-  }
-
-  private void register () {
-    WindowMenuManager.getShared().makeVisible(registerWindow);
-  }
-
-  /**
-   Handle the condition of not storing all user input due to the application
-   not being registered.
-
-   @param reg The registration exception generated.
-   */
-  private void handleRegistrationException (RegistrationException reg) {
-    handleRegistrationLimitation();
-  }
-
-  /**
-   Handle the condition of not saving all user input due to the application
-   not being registered.
-   */
-  private void handleRegistrationLimitation () {
-    Trouble.getShared().report("Unregistered copy will save no more than "
-        + String.valueOf(DEMO_LIMIT) + " items in Demo mode",
-        "Demo Warning");
-  }
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -1909,6 +1860,7 @@ public class URLMainFrame extends javax.swing.JFrame
     fileSaveMenuItem = new javax.swing.JMenuItem();
     fileSaveAsMenuItem = new javax.swing.JMenuItem();
     reloadMenuItem = new javax.swing.JMenuItem();
+    clearMenuItem = new javax.swing.JMenuItem();
     jSeparator1 = new javax.swing.JSeparator();
     propertiesMenuItem = new javax.swing.JMenuItem();
     jSeparator2 = new javax.swing.JSeparator();
@@ -1936,9 +1888,6 @@ public class URLMainFrame extends javax.swing.JFrame
     toolsOptionsMenuItem = new javax.swing.JMenuItem();
     windowMenu = new javax.swing.JMenu();
     helpMenu = new javax.swing.JMenu();
-    helpPurchaseMenuItem = new javax.swing.JMenuItem();
-    registerMenuItem = new javax.swing.JMenuItem();
-    jSeparator9 = new javax.swing.JPopupMenu.Separator();
     helpHistoryMenuItem = new javax.swing.JMenuItem();
     userGuideMenuItem = new javax.swing.JMenuItem();
     jSeparator7 = new javax.swing.JSeparator();
@@ -2318,6 +2267,14 @@ public class URLMainFrame extends javax.swing.JFrame
       }
     });
     fileMenu.add(reloadMenuItem);
+
+    clearMenuItem.setText("Clear...");
+    clearMenuItem.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        clearMenuItemActionPerformed(evt);
+      }
+    });
+    fileMenu.add(clearMenuItem);
     fileMenu.add(jSeparator1);
 
     propertiesMenuItem.setAccelerator(KeyStroke.getKeyStroke (KeyEvent.VK_I, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -2480,23 +2437,6 @@ replaceMenuItem.addActionListener(new java.awt.event.ActionListener() {
   mainMenuBar.add(windowMenu);
 
   helpMenu.setText("Help");
-
-  helpPurchaseMenuItem.setText("Purchase License");
-  helpPurchaseMenuItem.addActionListener(new java.awt.event.ActionListener() {
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
-      helpPurchaseMenuItemActionPerformed(evt);
-    }
-  });
-  helpMenu.add(helpPurchaseMenuItem);
-
-  registerMenuItem.setText("Product Registration...");
-  registerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
-      registerMenuItemActionPerformed(evt);
-    }
-  });
-  helpMenu.add(registerMenuItem);
-  helpMenu.add(jSeparator9);
 
   helpHistoryMenuItem.setText("Program History");
   helpHistoryMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -2721,14 +2661,6 @@ private void publishWindowMenuItemActionPerformed(java.awt.event.ActionEvent evt
   displayPublishWindow();
 }//GEN-LAST:event_publishWindowMenuItemActionPerformed
 
-private void helpPurchaseMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpPurchaseMenuItemActionPerformed
-  purchase();
-}//GEN-LAST:event_helpPurchaseMenuItemActionPerformed
-
-private void registerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerMenuItemActionPerformed
-  register();
-}//GEN-LAST:event_registerMenuItemActionPerformed
-
 private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpHistoryMenuItemActionPerformed
   File historyFile = new File (appFolder, "versions.html");
   try {
@@ -2772,11 +2704,16 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
     }
   }//GEN-LAST:event_urlButtonActionPerformed
 
+  private void clearMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearMenuItemActionPerformed
+    clearFile();
+  }//GEN-LAST:event_clearMenuItemActionPerformed
+
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JMenu URLMenu;
   private javax.swing.JMenuItem addReplaceMenuItem;
+  private javax.swing.JMenuItem clearMenuItem;
   private javax.swing.JTabbedPane collectionTabbedPane;
   private javax.swing.JLabel commentsLabel;
   private javax.swing.JScrollPane commentsScrollPane;
@@ -2794,7 +2731,6 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JMenuItem flattenTagsMenuItem;
   private javax.swing.JMenuItem helpHistoryMenuItem;
   private javax.swing.JMenu helpMenu;
-  private javax.swing.JMenuItem helpPurchaseMenuItem;
   private javax.swing.JMenuItem helpReduceWindowSizeMenuItem;
   private javax.swing.JMenuItem helpSoftwareUpdatesMenuItem;
   private javax.swing.JMenuItem importMenuItem;
@@ -2806,7 +2742,6 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JSeparator jSeparator5;
   private javax.swing.JSeparator jSeparator7;
   private javax.swing.JSeparator jSeparator8;
-  private javax.swing.JPopupMenu.Separator jSeparator9;
   private javax.swing.JButton launchButton;
   private javax.swing.JPanel linkPanel;
   private javax.swing.JMenu listMenu;
@@ -2822,7 +2757,6 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JMenuItem propertiesMenuItem;
   private javax.swing.JMenuItem publishNowMenuItem;
   private javax.swing.JMenuItem publishWindowMenuItem;
-  private javax.swing.JMenuItem registerMenuItem;
   private javax.swing.JMenuItem reloadMenuItem;
   private javax.swing.JMenuItem replaceMenuItem;
   private javax.swing.JMenuItem submitFeedbackMenuItem;

@@ -1,10 +1,27 @@
+/*
+ * Copyright 1999 - 2013 Herb Bowie
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.powersurgepub.urlunion;
 
+  import com.powersurgepub.psdatalib.psdata.*;
+  import com.powersurgepub.psdatalib.psexcel.*;
   import com.powersurgepub.psdatalib.pstags.*;
   import com.powersurgepub.psdatalib.txbio.*;
   import com.powersurgepub.psdatalib.txbmodel.*;
   import com.powersurgepub.psdatalib.tabdelim.*;
-  import com.powersurgepub.psdatalib.psdata.*;
   import com.powersurgepub.psutils.*;
   import java.io.*;
   import java.util.*;
@@ -38,6 +55,8 @@ public class URLInputOutput {
   // Used to read links from HTML
   private     HTMLFile            htmlFile;
   private     HTMLTag             htmlTag;
+  
+  private     DataSource          dataSource;        
   private     StringBuffer        textIn = new StringBuffer();
   private     boolean             defForTags = false;
   private     URLCollection       urls;
@@ -71,9 +90,34 @@ public class URLInputOutput {
    */
   public boolean read (File file, URLCollection urls) {
 
+    FileName fileName = new FileName (file);
+    boolean ok = true;
+    if (fileName.getExt().equals("htm")
+        || fileName.getExt().equals("html")
+        || fileName.getExt().equals("xhtml")) {
+      ok = readHTML (fileName, urls);
+    }
+    else
+    if (fileName.getExt().equals("txt")
+        || fileName.getExt().equals("xls")) {
+      ok = readTable (fileName, urls);
+    } else {
+      Trouble.getShared().report("Input file name " 
+          + file.getName() 
+          + " does not have a recognized file extension", 
+          "File Input Error");
+    }
+    return ok;
+  }
+  
+  /**
+   Parse a specific html file.
+   */
+  public boolean readHTML (FileName fileName, URLCollection urls) {
+
     boolean ok = true;
     demoLimitExceeded = false;
-    htmlFile = new HTMLFile (file);
+    htmlFile = new HTMLFile (fileName.toString());
     this.urls = urls;
     try {
       htmlFile.openForInput();
@@ -88,7 +132,7 @@ public class URLInputOutput {
     } catch (java.io.IOException e) {
       ok = false;
       log.recordEvent (LogEvent.MEDIUM,
-            "Encountered I/O error while reading HTML file " + file.toString()
+            "Encountered I/O error while reading HTML file " + fileName.toString()
             + e.toString(),
             false);
     }
@@ -189,14 +233,74 @@ public class URLInputOutput {
       } // end if DD tag
     } // end if beginning tab
   } // end method processHTMLTag
+  
+  /**
+   Parse a specific tabular file.
+   */
+  public boolean readTable (FileName fileName, URLCollection urls) {
+
+    boolean ok = true;
+    demoLimitExceeded = false;
+    if (fileName.getExt().equals("xls")) {
+      dataSource = new ExcelFile(fileName.toString());
+    } else {
+      dataSource = new TabDelimFile (fileName.toString());
+    }
+    this.urls = urls;
+    try {
+      dataSource.openForInput();
+      url = new URLPlus();
+      DataRecord row;
+      DataField column;
+      while (! dataSource.isAtEnd()) {
+        row = dataSource.nextRecordIn();
+        if (row != null) {
+          url = new URLPlus();
+          row.startWithFirstField();
+          while (row.hasMoreFields()) {
+            column = row.nextField();
+            if (column != null) {
+              if (column.getCommonFormOfName().contains("title")
+                  && url.getTitle().length() == 0) {
+                url.setTitle(column.getData());
+              }
+              else
+              if (column.getCommonFormOfName().contains("url")
+                  && url.blankURL()) {
+                url.setURL(column.getData());
+              }
+              else
+              if (column.getCommonFormOfName().contains("tags")
+                  && url.getTagsAsString().length() == 0) {
+                url.setTags(column.getData());
+              }
+              else
+              if ((column.getCommonFormOfName().contains("comments")
+                  || column.getCommonFormOfName().contains("notes"))
+                  && (url.getComments().length() == 0)) {
+                url.setComments(column.getData());
+              }
+            } // end if column not null
+          } // end while row has more columns to consider
+          if (url.hasUniqueKey()) {
+            urls.add(url);
+          }
+        } // end if row not null
+      } // end while data source has more records
+      
+    } catch (java.io.IOException e) {
+      ok = false;
+      log.recordEvent (LogEvent.MEDIUM,
+            "Encountered I/O error while reading HTML file " + fileName.toString()
+            + e.toString(),
+            false);
+    }
+    return ok;
+  }
 
   private void addItemIfLink () {
     if (url.hasURL()) {
-      if (urls.roomForMore()) {
-        urls.add (url);
-      } else {
-        demoLimitExceeded = true;
-      }
+      urls.add (url);
       url = new URLPlus();
     }
   }

@@ -1,7 +1,22 @@
+/*
+ * Copyright 1999 - 2013 Herb Bowie
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.powersurgepub.urlunion;
 
   import com.powersurgepub.psdatalib.pstags.*;
-  import com.powersurgepub.regcodes.*;
   import java.io.*;
   import java.util.*;
   import javax.swing.table.*;
@@ -63,7 +78,7 @@ public class URLCollection
       findIndex = 0;
     }
     else
-    if (get(urls.size() - 1).compareToURL(newURL) < 0) {
+    if (get(urls.size() - 1).compareToUsingUniqueKey(newURL) < 0) {
       // If the new URL has a key higher than the highest item in the
       // collection, simply add the new URL to the end
       // (more efficient if an input file happens to be pre-sorted).
@@ -142,7 +157,7 @@ public class URLCollection
       int diff = high - low;
       int split = diff / 2;
       findIndex = low + split;
-      int compare = get(findIndex).compareToURL(findURL);
+      int compare = get(findIndex).compareToUsingUniqueKey(findURL);
       if (compare == 0) {
         // found an exact match
         findMatch = true;
@@ -180,10 +195,16 @@ public class URLCollection
   }
 
   public URLPositioned next (URLPositioned position) {
+    URLPositioned nextPosition = null;
     if (position.navigateUsingList()) {
-      return nextUsingList (position);
+      nextPosition = nextUsingList (position);
     } else {
-      return nextUsingTree (position);
+      nextPosition = nextUsingTree (position);
+    }
+    if (nextPosition == null) {
+      return first(position);
+    } else {
+      return nextPosition;
     }
   }
 
@@ -255,13 +276,17 @@ public class URLCollection
   }
 
   public URLPositioned positionUsingNode (TagsNode node) {
-    URLPositioned position = new URLPositioned();
-    position.setURLPlus ((URLPlus)node.getTaggable());
-    position.setTagsNode (node);
-    findInternal (position.getURLPlus());
-    position.setIndex (findIndex);
-    position.setNavigator (URLPositioned.NAVIGATE_USING_TREE);
-    return position;
+    if (node == null) {
+      return null;
+    } else {
+      URLPositioned position = new URLPositioned();
+      position.setURLPlus ((URLPlus)node.getTaggable());
+      position.setTagsNode (node);
+      findInternal (position.getURLPlus());
+      position.setIndex (findIndex);
+      position.setNavigator (URLPositioned.NAVIGATE_USING_TREE);
+      return position;
+    }
   }
 
   public int getColumnCount () {
@@ -313,15 +338,6 @@ public class URLCollection
 
   public String getTitle () {
     return title;
-  }
-
-  /**
-   Can more records/items be added without exceeding the demo limitation?
-
-   @return     True if more can be added, false if we've hit the ceiling.
-   */
-  public boolean roomForMore() {
-    return RegisterWindow.getShared().roomForMore(size());
   }
 
   public int size() {
