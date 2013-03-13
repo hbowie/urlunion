@@ -1,0 +1,32 @@
+<?output "../../../apps/pstextmerge/mac/URL Union Folder/URL Union.app/Contents/Resources/appfolder/versions.html"?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>URL Union Version History</title>
+	<style type="text/css" title="text/css">
+    @import url(userguide/styles.css);
+  </style>
+</head>
+<body>
+
+<h1>URL Union Version History</h1>
+
+<?nextrec?>
+<?definegroup 1 "=$sequence$=" ?>
+<?ifendgroup 1?>
+</ol>
+<?ifnewgroup 1?>
+<h3>Version =$sequence$= (=$duedateymd$=)</h3>
+<ol>
+<?endif?>
+<?if =$status$= gt 5?>
+<li><p><strong>=$title$=</strong> <br />
+=$outcome$=</p></li>
+<?endif?>
+<?loop?>
+
+</body>
+</html>
+
+

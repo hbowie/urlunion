@@ -16,6 +16,7 @@
 
 package com.powersurgepub.urlunion;
 
+  import com.powersurgepub.linktweaker.*;
   import com.powersurgepub.psfiles.*;
   import com.powersurgepub.psdatalib.ui.*;
   import com.powersurgepub.psdatalib.pstags.*;
@@ -48,7 +49,8 @@ public class URLMainFrame extends javax.swing.JFrame
       FileSpecOpener,
       PublishAssistant,
       URLValidationRegistrar,
-      XHandler {
+      XHandler,
+      LinkTweakerApp {
 
   public static final String PROGRAM_NAME    = "URL Union";
   public static final String PROGRAM_VERSION = "2.00a1";
@@ -162,6 +164,8 @@ public class URLMainFrame extends javax.swing.JFrame
   private             boolean             netscapeWritten = false;
   private             boolean             outlineWritten = false;
   private             boolean             indexWritten = false;
+  
+  private             LinkTweaker         linkTweaker;
 
   /** Creates new form URLMainFrame */
   public URLMainFrame() {
@@ -263,6 +267,8 @@ public class URLMainFrame extends javax.swing.JFrame
 
     collectionWindow = new CollectionWindow();
     replaceWindow = new ReplaceWindow(this);
+    
+    linkTweaker = new LinkTweaker(this);
 
     // Get System Properties
     userName = System.getProperty ("user.name");
@@ -1081,8 +1087,13 @@ public class URLMainFrame extends javax.swing.JFrame
     openFile (inFile);
   }
 
+  /**
+   Open the passed URI. 
+   
+   @param inURI The URI to open. 
+  */
   public void handleOpenURI(URI inURI) {
-    
+    // Not supported
   }
 
   /**
@@ -1624,6 +1635,19 @@ public class URLMainFrame extends javax.swing.JFrame
     }
     return backupFolder;
   }
+  
+  private void tweakURL() {
+    if (urlText.getText().length() > 0) {
+      linkTweaker.setLink(urlText.getText());
+    }
+    displayAuxiliaryWindow(linkTweaker);
+  }
+  
+  public void setTweakedLink (String tweakedLink) {
+    if (tweakedLink.length() > 0) {
+      urlText.setText(tweakedLink);
+    }
+  }
 
   public void openURL (File file) {
     appster.openURL(file);
@@ -1848,7 +1872,9 @@ public class URLMainFrame extends javax.swing.JFrame
     titleText = new javax.swing.JTextField();
     urlButton = new javax.swing.JButton();
     urlLaunchButton = new javax.swing.JButton();
-    urlText = new javax.swing.JTextField();
+    tweakButton = new javax.swing.JButton();
+    urlScrollPane = new javax.swing.JScrollPane();
+    urlText = new javax.swing.JTextArea();
     tagsLabel = new javax.swing.JLabel();
     commentsLabel = new javax.swing.JLabel();
     commentsScrollPane = new javax.swing.JScrollPane();
@@ -1861,6 +1887,7 @@ public class URLMainFrame extends javax.swing.JFrame
     fileSaveMenuItem = new javax.swing.JMenuItem();
     fileSaveAsMenuItem = new javax.swing.JMenuItem();
     reloadMenuItem = new javax.swing.JMenuItem();
+    jSeparator6 = new javax.swing.JPopupMenu.Separator();
     clearMenuItem = new javax.swing.JMenuItem();
     jSeparator1 = new javax.swing.JSeparator();
     propertiesMenuItem = new javax.swing.JMenuItem();
@@ -2146,11 +2173,11 @@ public class URLMainFrame extends javax.swing.JFrame
     });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.weighty = 0.1;
-    gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
+    gridBagConstraints.insets = new java.awt.Insets(8, 0, 2, 0);
     linkPanel.add(urlButton, gridBagConstraints);
 
     urlLaunchButton.setBackground(new java.awt.Color(51, 51, 51));
@@ -2169,17 +2196,46 @@ public class URLMainFrame extends javax.swing.JFrame
     });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+    gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
     linkPanel.add(urlLaunchButton, gridBagConstraints);
+
+    tweakButton.setText("Tweak");
+    tweakButton.setToolTipText("Click here to tweak the link.");
+    tweakButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    tweakButton.setMaximumSize(new java.awt.Dimension(120, 24));
+    tweakButton.setMinimumSize(new java.awt.Dimension(70, 24));
+    tweakButton.setPreferredSize(new java.awt.Dimension(70, 24));
+    tweakButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        tweakButtonActionPerformed(evt);
+      }
+    });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 4;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.weighty = 0.1;
+    gridBagConstraints.insets = new java.awt.Insets(2, 0, 4, 0);
+    linkPanel.add(tweakButton, gridBagConstraints);
+
+    urlText.setColumns(20);
+    urlText.setLineWrap(true);
+    urlText.setRows(3);
+    urlScrollPane.setViewportView(urlText);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.gridheight = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-    linkPanel.add(urlText, gridBagConstraints);
+    gridBagConstraints.weighty = 0.2;
+    gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
+    linkPanel.add(urlScrollPane, gridBagConstraints);
 
     tagsLabel.setText("Tags:");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2195,7 +2251,7 @@ public class URLMainFrame extends javax.swing.JFrame
     commentsLabel.setText("Comments:");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 4;
+    gridBagConstraints.gridy = 6;
     gridBagConstraints.gridwidth = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -2210,11 +2266,11 @@ public class URLMainFrame extends javax.swing.JFrame
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 3;
+    gridBagConstraints.gridy = 6;
     gridBagConstraints.gridheight = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
+    gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
     linkPanel.add(commentsScrollPane, gridBagConstraints);
 
@@ -2268,6 +2324,7 @@ public class URLMainFrame extends javax.swing.JFrame
       }
     });
     fileMenu.add(reloadMenuItem);
+    fileMenu.add(jSeparator6);
 
     clearMenuItem.setText("Clear...");
     clearMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -2709,6 +2766,10 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
     clearFile();
   }//GEN-LAST:event_clearMenuItemActionPerformed
 
+  private void tweakButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tweakButtonActionPerformed
+    tweakURL();
+  }//GEN-LAST:event_tweakButtonActionPerformed
+
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2741,6 +2802,7 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JSeparator jSeparator3;
   private javax.swing.JSeparator jSeparator4;
   private javax.swing.JSeparator jSeparator5;
+  private javax.swing.JPopupMenu.Separator jSeparator6;
   private javax.swing.JSeparator jSeparator7;
   private javax.swing.JSeparator jSeparator8;
   private javax.swing.JButton launchButton;
@@ -2769,6 +2831,7 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JMenuItem toolsOptionsMenuItem;
   private javax.swing.JPanel treePanel;
   private javax.swing.JScrollPane treeScrollPane;
+  private javax.swing.JButton tweakButton;
   private javax.swing.JButton urlButton;
   private javax.swing.JButton urlDeleteButton;
   private javax.swing.JButton urlFirstButton;
@@ -2778,8 +2841,9 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JButton urlNextButton;
   private javax.swing.JButton urlOKButton;
   private javax.swing.JButton urlPriorButton;
+  private javax.swing.JScrollPane urlScrollPane;
   private javax.swing.JTable urlTable;
-  private javax.swing.JTextField urlText;
+  private javax.swing.JTextArea urlText;
   private javax.swing.JTree urlTree;
   private javax.swing.JMenuItem userGuideMenuItem;
   private javax.swing.JMenuItem validateURLsMenuItem;
