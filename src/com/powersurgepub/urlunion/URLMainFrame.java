@@ -166,6 +166,7 @@ public class URLMainFrame extends javax.swing.JFrame
   private             boolean             indexWritten = false;
   
   private             LinkTweaker         linkTweaker;
+  private             TweakerPrefs        tweakerPrefs;
 
   /** Creates new form URLMainFrame */
   public URLMainFrame() {
@@ -195,6 +196,9 @@ public class URLMainFrame extends javax.swing.JFrame
     filePrefs = new FilePrefs(this);
     filePrefs.loadFromPrefs();
     prefsWindow.setFilePrefs(filePrefs);
+    
+    tweakerPrefs = new TweakerPrefs();
+    prefsWindow.getPrefsTabs().add(TweakerPrefs.PREFS_TAB_NAME, tweakerPrefs);
     
     recentFiles = new RecentFiles();
     
@@ -268,7 +272,7 @@ public class URLMainFrame extends javax.swing.JFrame
     collectionWindow = new CollectionWindow();
     replaceWindow = new ReplaceWindow(this);
     
-    linkTweaker = new LinkTweaker(this);
+    linkTweaker = new LinkTweaker(this, prefsWindow.getPrefsTabs());
 
     // Get System Properties
     userName = System.getProperty ("user.name");
