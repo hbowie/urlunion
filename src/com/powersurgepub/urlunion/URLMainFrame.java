@@ -1074,6 +1074,7 @@ public class URLMainFrame extends javax.swing.JFrame
     }
     boolean prefsOK = userPrefs.savePrefs();
     recentFiles.savePrefs();
+    tweakerPrefs.savePrefs();
   }
 
   public void handleOpenFile (FileSpec fileSpec) {
