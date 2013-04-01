@@ -34,8 +34,8 @@ package com.powersurgepub.urlunion;
 public class URLInputOutput {
 
   private             int         favoritesColumns = 4;
-  private             String      favoritesColumnWidth = "22%";
-  private             String      favoritesGutterWidth = "4%";
+  private             int         favoritesEmptyColumns = 0;
+  private             String      favoritesColumnClass = "span3";
 
   public static final String      TAGS        = "tags";
   public static final String      FAVORITES   = "favorites";
@@ -329,7 +329,7 @@ public class URLInputOutput {
     this.urls = urls;
     okSoFar = markupWriter.openForOutput();
     level = 0;
-    startFile(urls.getTitle());
+    startFile(urls.getTitle(), false);
     writeStartTag (TextType.DEFINITION_LIST);
 
 
@@ -529,28 +529,32 @@ public class URLInputOutput {
     lineMax = favoritesRows;
     switch (favoritesColumns) {
       case 1:
-        favoritesColumnWidth = "100%";
-        favoritesGutterWidth = "0%";
+        favoritesEmptyColumns = 0;
+        favoritesColumnClass = "span12";
         break;
       case 2:
-        favoritesColumnWidth = "48%";
-        favoritesGutterWidth = "4%";
+        favoritesEmptyColumns = 0;
+        favoritesColumnClass = "span6";
         break;
       case 3:
-        favoritesColumnWidth = "30%";
-        favoritesGutterWidth = "5%";
+        favoritesEmptyColumns = 0;
+        favoritesColumnClass = "span4";
+        break;
+      case 4:
+        favoritesEmptyColumns = 0;
+        favoritesColumnClass = "span3";
         break;
       case 5:
-        favoritesColumnWidth = "16%";
-        favoritesGutterWidth = "5%";
+        favoritesEmptyColumns = 1;
+        favoritesColumnClass = "span2";
         break;
       case 6:
-        favoritesColumnWidth = "14%";
-        favoritesGutterWidth = "3%";
+        favoritesEmptyColumns = 0;
+        favoritesColumnClass = "span2";
         break;
       default:
-        favoritesColumnWidth = "22%";
-        favoritesGutterWidth = "4%";
+        favoritesEmptyColumns = 0;
+        favoritesColumnClass = "span3";
     }
     
     ArrayList favoritesTagsList = getFavoritesList(favoritesTagsString);
@@ -680,18 +684,71 @@ public class URLInputOutput {
    */
   private void startFavorites (String suffix) {
     markupWriter.openForOutput();
-    startFile (urls.getTitle() + " | " + suffix);
-    writeStartTag (TextType.TABLE);
-    writeStartTag (TextType.TABLE_ROW);
-    writeStartTag (TextType.TABLE_DATA, FAVORITES, TextType.WIDTH, favoritesColumnWidth);
+    startFile (urls.getTitle() + " | " + suffix, true);
+
+    startDiv ("navbar navbar-inverse navbar-fixed-top");
+    startDiv ("navbar-inner");
+    startDiv ("container");
+    beginStartTag  (TextType.ANCHOR);
+    addAttribute   (TextType.CLASS, "btn btn-navbar");
+    addAttribute   (TextType.DATA_TOGGLE, "collapse");
+    addAttribute   (TextType.DATA_TARGET, ".nav-collapse");
+    finishStartTag (TextType.ANCHOR);
+
+    beginStartTag  (TextType.SPAN);
+    addAttribute   (TextType.CLASS, "icon-bar");
+    finishStartTag (TextType.SPAN);
+    writeEndTag    (TextType.SPAN);
+
+    beginStartTag  (TextType.SPAN);
+    addAttribute   (TextType.CLASS, "icon-bar");
+    finishStartTag (TextType.SPAN);
+    writeEndTag    (TextType.SPAN);
+
+    beginStartTag  (TextType.SPAN);
+    addAttribute   (TextType.CLASS, "icon-bar");
+    finishStartTag (TextType.SPAN);
+    writeEndTag    (TextType.SPAN);
+
+    writeEndTag    (TextType.ANCHOR);
+
+    FileName favoritesFile = new FileName (markupWriter.getDestination());
+    beginLink(favoritesFile.getFileName(), "brand");
+    writeContent(urls.getTitle() + " | " + suffix);
+    endLink();
+    startDiv ("nav-collapse collapse");
+    writeStartTag  (TextType.UNORDERED_LIST, "nav");
+    writeNavLink   ("active", "../index.html", "Home");
+    writeNavLink   ("", "urlunion.html", "List");
+    writeNavLink   ("", "bookmark.html", "Netscape");
+    writeNavLink   ("", "outline.html",  "Outline");
+    writeEndTag   (TextType.UNORDERED_LIST);
+    endDiv();
+    endDiv();
+    endDiv();
+    endDiv();
+    
+    startDiv("container");
+    startDiv("row");
+    startDiv(favoritesColumnClass);
+    
     columnCount = 0;
     lineCount = 0;
     // writeFavoriteHeading ("Bookmarks", 1);
     // writeFavorite ("All in Outline", "outline.html");
   }
+  
+  private void writeNavLink(String klass, String link, String content) {
+    writeStartTag (TextType.LIST_ITEM, klass);
+    beginLink (link);
+    writeContent(content);
+    endLink();
+    writeEndTag(TextType.LIST_ITEM);
+  }
 
   /**
    Write a heading for a new Favorites category of bookmarks.
+  
    @param title The title of the category.
    @param headingLevel The heading level of the category.
    */
@@ -713,6 +770,7 @@ public class URLInputOutput {
 
   /**
    Write a favorite bookmark.
+  
    @param title The title of the bookmark.
    @param link  The actual URL.
    */
@@ -730,15 +788,17 @@ public class URLInputOutput {
 
   /**
    Finish off the favorites page
+  
    @param file The file being produced.
    */
   private void finishFavorites (File file) {
     while (columnCount < (favoritesColumns - 1)) {
       startNewColumn();
     }
-    writeEndTag (TextType.TABLE_DATA);
-    writeEndTag (TextType.TABLE_ROW);
-    writeEndTag (TextType.TABLE);
+    endDiv(); // column
+    endDiv(); // row
+    endDiv(); // container
+    
     endFile();
     okSoFar = closeOutput();
     Logger.getShared().recordEvent (LogEvent.NORMAL,
@@ -751,24 +811,14 @@ public class URLInputOutput {
    */
   private void startNewColumn () {
 
-    writeEndTag (TextType.TABLE_DATA);
+    endDiv(); // end column
     columnCount++;
     if (columnCount >= favoritesColumns) {
-      writeEndTag (TextType.TABLE_ROW);
-      writeStartTag (TextType.TABLE_ROW);
-      writeStartTag (TextType.TABLE_DATA, TextType.NO_STYLE, TextType.COLUMN_SPAN,
-          String.valueOf((favoritesColumns * 2) - 1));
-      write ("&nbsp;");
-      writeEndTag (TextType.TABLE_DATA);
-      writeEndTag (TextType.TABLE_ROW);
-      writeStartTag (TextType.TABLE_ROW);
+      endDiv(); // end row
+      startDiv("row");
       columnCount = 0;
-    } else {
-      // Write gutter column for spacing
-      writeStartTag (TextType.TABLE_DATA, FAVORITES, TextType.WIDTH, favoritesGutterWidth);
-      writeEndTag (TextType.TABLE_DATA);
-    }
-    writeStartTag (TextType.TABLE_DATA, FAVORITES, TextType.WIDTH, favoritesColumnWidth);
+    } 
+    startDiv(favoritesColumnClass);
     lineCount = 0;
   }
 
@@ -973,7 +1023,7 @@ public class URLInputOutput {
 
     markupWriter = new MarkupWriter (indexFile, MarkupWriter.HTML_FORMAT);
     okSoFar = markupWriter.openForOutput();
-    startFile(urls.getTitle() + " | " + "Index");
+    startFile(urls.getTitle() + " | " + "Index", false);
     writeStartTag (TextType.PARAGRAPH);
     writeContent ("This folder <cite>("
         + indexFile.getParent()
@@ -1034,7 +1084,7 @@ public class URLInputOutput {
 
   }
 
-  private void startFile (String title) {
+  private void startFile (String title, boolean bootstrap) {
     // writeLine ("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
     //     + "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
     xmlNameSpacePrefixWithColon = "";
@@ -1044,19 +1094,38 @@ public class URLInputOutput {
     writeStartTag (TextType.TITLE);
     writeContent (title);
     writeEndTag (TextType.TITLE);
-
+    if (bootstrap) {
+      writeMetadataNameAndContent 
+          ("viewport", "width=device-width, initial-scale=1.0");
+    }
     writeMetadataNameAndContent ("generator", Home.getShared().getProgramName() + " "
         + Home.getShared().getProgramVersion());
-
-    beginStartTag (TextType.LINK);
-    addAttribute (TextType.REL, TextType.STYLESHEET);
-    addAttribute (TextType.TYPE, TextType.TEXT_CSS);
-    addAttribute (TextType.HREF, "urlunion/styles.css");
-    finishStartAndEndTag (TextType.LINK);
-
+    if (bootstrap) {
+      writeStyleSheetLink ("bootstrap/css/bootstrap.css");
+      beginStartTag (TextType.STYLE);
+      addAttribute (TextType.TYPE, TextType.TEXT_CSS);
+      finishStartTag(TextType.STYLE);
+      writeLine ("      body {");
+      writeLine ("        padding-top: 60px;");
+      writeLine ("        padding-bottom: 40px;");
+      writeLine ("      }");
+      writeEndTag (TextType.STYLE);
+      writeStyleSheetLink ("bootstrap/css/bootstrap-responsive.css");
+      writeScriptSrc ("javascript/jquery.js");
+      writeScriptSrc ("bootstrap/js/bootstrap.js");
+    }
+    writeStyleSheetLink 
+        ("http://fonts.googleapis.com/css?family=Merriweather+Sans:400,700");
+    writeStyleSheetLink ("css/styles.css");
+    writeLine ("    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->");
+    writeLine ("    <!--[if lt IE 9]>");
+    writeScriptSrc ("http://html5shim.googlecode.com/svn/trunk/html5.js");
+    writeLine ("    <![endif]-->");
+    
     writeEndTag (TextType.HEAD);
 
     writeStartTag (TextType.BODY);
+
   }
 
   private void endFile () {
@@ -1071,6 +1140,31 @@ public class URLInputOutput {
       writeContent (content);
       writeEndTag (elementName);
     }
+  }
+  
+  private void startDiv (String klass) {
+    beginStartTag  (TextType.DIV);
+    addAttribute   (TextType.CLASS, klass);
+    finishStartTag (TextType.DIV);
+  }
+  
+  private void endDiv() {
+    writeEndTag (TextType.DIV);
+  }
+  
+  private void writeScriptSrc (String src) {
+    beginStartTag  (TextType.SCRIPT);
+    addAttribute   (TextType.SRC, src);
+    finishStartTag (TextType.SCRIPT);
+    writeEndTag    (TextType.SCRIPT);
+  }
+  
+  private void writeStyleSheetLink (String link) {
+    beginStartTag (TextType.LINK);
+    addAttribute (TextType.REL, TextType.STYLESHEET);
+    addAttribute (TextType.TYPE, TextType.TEXT_CSS);
+    addAttribute (TextType.HREF, link);
+    finishStartAndEndTag (TextType.LINK);
   }
 
   private void beginLink (String address) {
