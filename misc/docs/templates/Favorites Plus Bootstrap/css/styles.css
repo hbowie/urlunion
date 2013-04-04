@@ -1,0 +1,109 @@
+body, p, h1 
+{ 
+	font-family: 'Merriweather Sans', Lucida Sans Unicode, Lucida Grande, sans-serif;
+}
+
+body, p, h1
+{
+	font-size: 10pt;
+	line-height: 1.2em;
+}
+
+.tags { font-style: italic; }
+
+h1.favorites
+{
+	font-family: 'Merriweather Sans', Lucida Sans Unicode, Lucida Grande, sans-serif;
+	font-weight: 700;
+	margin-top: 10pt;
+	margin-bottom: 4pt;
+	line-height: normal;
+}
+
+p.favorites
+{
+	font-family: 'Merriweather Sans', Lucida Sans Unicode, Lucida Grande, sans-serif;
+	font-size: 10pt;
+	margin-top: 0pt;
+	margin-bottom: 4pt;
+}
+
+td.favorites { vertical-align: top; }
+
+.favorites a:link
+{
+	text-decoration: none;
+	color: #004080;
+}
+.favorites a:visited
+{
+	text-decoration: none;
+	color: #400080;
+}
+.favorites a:hover   { text-decoration: underline; }
+.favorites a:active  { text-decoration: underline; }
+
+.outliner { 
+    /* padding: .75em 2em .75em 2em; 
+    border: 1px dotted #333; */
+}
+.outliner ul { 
+    padding-top: .25em; 
+    padding-left: -1em 
+}
+.outliner ol { 
+    padding-top: .25em; 
+}
+.outliner li { 
+    font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+	  font-size: 10pt;
+    padding: .15em;
+    margin-left: -16px; 
+    list-style: none; 
+}
+.outliner .itemexpanded  { 
+    display: block 
+}
+.outliner .itemcollapsed { 
+    display: none 
+}
+.outliner .itemparent { 
+}
+.outliner .handleexpanded, .outliner .handlecollapsed, .outliner .handleleaf {
+    float: left; 
+    display: block; 
+    margin: 0;
+    padding: 0;
+    width: 16px;
+    background-image: url(icons.gif);
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+.outliner .handleleaf {
+    background-position: -32px -2px;
+}
+.outliner .handleexpanded {
+    background-position:   0px -2px;
+    cursor: pointer 
+}
+.outliner .handlecollapsed {
+    background-position: -16px -2px;
+    cursor: pointer 
+}
+ .itemeditor { 
+    /*
+    display: none; 
+    position: absolute; 
+    font: 9pt arial; 
+    
+    border: none; 
+    height: 1.75em; 
+    margin: 0;
+    padding: -0.25em;
+    margin-bottom: -1ex;
+    border-bottom: 1px dotted #333; 
+    */
+}
+.outliner .selected { 
+    background-color: #eee; 
+}

@@ -1490,10 +1490,7 @@ public class URLMainFrame extends javax.swing.JFrame
     favoritesWritten = false;
     if (! urlFile.getName().equalsIgnoreCase (FAVORITES_FILE_NAME)) {
       favoritesWritten = io.publishFavorites
-          (publishTo, urls,
-              prefsWindow.getFavoritesPrefs().getFavoritesColumns(),
-              prefsWindow.getFavoritesPrefs().getFavoritesRows(),
-              prefsWindow.getFavoritesPrefs().getFavoritesTags());
+          (publishTo, urls, prefsWindow.getFavoritesPrefs());
     }
     return favoritesWritten;
   }
@@ -1515,7 +1512,7 @@ public class URLMainFrame extends javax.swing.JFrame
     outlineWritten = false;
     if (! urlFile.getName().equalsIgnoreCase (OUTLINE_FILE_NAME)) {
       File dynamicHTMLFile = new File (publishTo, OUTLINE_FILE_NAME);
-      io.publishXOXO(dynamicHTMLFile, urls);
+      io.publishOutline(dynamicHTMLFile, urls);
       outlineWritten = true;
     }
     return outlineWritten;
