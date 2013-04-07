@@ -922,7 +922,6 @@ public class URLMainFrame extends javax.swing.JFrame
 
     if (node == null) {
       // nothing selected
-      // System.out.println ("selectBranch selected component = null");
     }
     else
     if (node == position.getTagsNode()) {
@@ -932,7 +931,6 @@ public class URLMainFrame extends javax.swing.JFrame
     }
     else
     if (node.getNodeType() == TagsNode.ITEM) {
-      // System.out.println ("selectBranch selected item = " + node.toString());
       modIfChanged();
       URLPlus branch = (URLPlus)node.getTaggable();
       int branchIndex = urls.find (branch);
@@ -946,7 +944,6 @@ public class URLMainFrame extends javax.swing.JFrame
     }
     else {
       // Do nothing until an item is selected
-      // System.out.println ("selectBranch selected node = " + node.toString());
     }
   }
 
@@ -1011,8 +1008,6 @@ public class URLMainFrame extends javax.swing.JFrame
   }
 
   public void setUnsavedChanges (boolean unsavedChanges) {
-    // System.out.println ("unsaved changes set to "
-    //     + String.valueOf(unsavedChanges));
     this.unsavedChanges = unsavedChanges;
     xos.setUnsavedChanges(unsavedChanges);
   }
@@ -1175,16 +1170,9 @@ public class URLMainFrame extends javax.swing.JFrame
     File fileToOpen = null;
     File selectedFile = null;
     selectedFile = fileChooser.showOpenDialog(this);
-    /* if (selectedFile == null) {
-      System.out.println ("showOpenDialog returned null!!");
-    } else {
-      System.out.println ("showOpenDialog returned " + selectedFile.toString());
-    } */
     if (selectedFile != null) {
       if (selectedFile.isDirectory()) {
-        // System.out.println ("Selected file is a directory");
         fileToOpen = new File (selectedFile, DEFAULT_FILE_NAME);
-        // System.out.println ("fileToOpen is " + fileToOpen.toString());
       } else {
         fileToOpen = selectedFile;
       }
@@ -1200,7 +1188,6 @@ public class URLMainFrame extends javax.swing.JFrame
   } // end method openFile
 
   private void openFile (File fileToOpen) {
-    // System.out.println ("openFile for " + fileToOpen.toString());
     closeFile();
     initCollection();
     setURLFile (fileToOpen);
@@ -1298,7 +1285,6 @@ public class URLMainFrame extends javax.swing.JFrame
     if (urlFile == null) {
       saveFileAs();
     } else {
-      // System.out.println ("URLMainFrame saveFile " + urlFile.toString());
       io.save (urlFile, urls);
       setUnsavedChanges(false);
       publishWindow.saveSource();

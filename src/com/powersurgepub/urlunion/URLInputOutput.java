@@ -615,7 +615,7 @@ public class URLInputOutput {
               inFavorites = true;
               favoritesLevel = level;
               sections = new ArrayList();
-              file = new File (publishTo, nodeTag + ".html");
+              file = new File (publishTo, nodeTag.toLowerCase() + ".html");
               markupWriter = new MarkupWriter (file, MarkupWriter.HTML_FORMAT);
               markupWriterOpen = true;
               startFavorites(node.toString());
