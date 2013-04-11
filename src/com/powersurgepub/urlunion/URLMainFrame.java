@@ -1359,7 +1359,7 @@ public class URLMainFrame extends javax.swing.JFrame
     displayAuxiliaryWindow(publishWindow);
   }
 
-  public void displayAuxiliaryWindow(JFrame window) {
+  public void displayAuxiliaryWindow(WindowToManage window) {
     window.setLocation(
         this.getX() + 60,
         this.getY() + 60);
@@ -1631,7 +1631,7 @@ public class URLMainFrame extends javax.swing.JFrame
     displayAuxiliaryWindow(linkTweaker);
   }
   
-  public void setTweakedLink (String tweakedLink) {
+  public void setTweakedLink (String tweakedLink, String linkID) {
     if (tweakedLink.length() > 0) {
       urlText.setText(tweakedLink);
     }

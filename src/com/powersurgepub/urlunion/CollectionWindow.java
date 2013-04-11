@@ -15,7 +15,9 @@ package com.powersurgepub.urlunion;
  */
 public class CollectionWindow
     extends javax.swing.JFrame
-      implements WindowListener {
+      implements 
+        WindowListener,
+        WindowToManage {
   
   private URLCollection urls;
   

@@ -16,7 +16,9 @@ package com.powersurgepub.urlunion;
  *
  * @author  hbowie
  */
-public class PrefsWindow extends javax.swing.JFrame {
+public class PrefsWindow 
+  extends javax.swing.JFrame
+    implements WindowToManage {
   
   private URLMainFrame      mainFrame;
 

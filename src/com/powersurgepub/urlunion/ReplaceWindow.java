@@ -1,12 +1,15 @@
 package com.powersurgepub.urlunion;
 
+  import com.powersurgepub.psutils.*;
+
 /**
  A window for performing a find and replace operation. 
 
  @author Herb Bowie
  */
 public class ReplaceWindow 
-  extends javax.swing.JFrame {
+  extends javax.swing.JFrame 
+    implements WindowToManage {
   
   private URLMainFrame mainFrame;
 
