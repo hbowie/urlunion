@@ -167,6 +167,7 @@ public class URLMainFrame extends javax.swing.JFrame
   
   private             LinkTweaker         linkTweaker;
   private             TweakerPrefs        tweakerPrefs;
+  private             LinkLabel           linkLabel;
 
   /** Creates new form URLMainFrame */
   public URLMainFrame() {
@@ -178,6 +179,10 @@ public class URLMainFrame extends javax.swing.JFrame
     home = Home.getShared ();
     programVersion = ProgramVersion.getShared ();
     initComponents();
+    linkLabel = new LinkLabel("URL:");
+    linkLabel.setLinkTextArea(urlText);
+    linkLabel.setFrame(this);
+    
     getContentPane().add(statusBar, java.awt.BorderLayout.SOUTH);
     WindowMenuManager.getShared(windowMenu);
     currentDirectory = fileChooser.getCurrentDirectory();
@@ -232,6 +237,18 @@ public class URLMainFrame extends javax.swing.JFrame
     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
     linkPanel.add(tagsTextSelector, gridBagConstraints);
     tagsTextSelector.setValueList(urls.getTagsList());
+    
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.ipadx = 2;
+    gridBagConstraints.ipady = 2;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+    gridBagConstraints.weightx = 0.1;
+    gridBagConstraints.weighty = 0.1;
+    gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
+    linkPanel.add(linkLabel, gridBagConstraints);
 
     // Set initial UI prefs
     setBounds (
@@ -273,6 +290,7 @@ public class URLMainFrame extends javax.swing.JFrame
     replaceWindow = new ReplaceWindow(this);
     
     linkTweaker = new LinkTweaker(this, prefsWindow.getPrefsTabs());
+    linkLabel.setLinkTweaker(linkTweaker);
 
     // Get System Properties
     userName = System.getProperty ("user.name");
@@ -1858,9 +1876,6 @@ public class URLMainFrame extends javax.swing.JFrame
     linkPanel = new javax.swing.JPanel();
     titleLabel = new javax.swing.JLabel();
     titleText = new javax.swing.JTextField();
-    urlButton = new javax.swing.JButton();
-    urlLaunchButton = new javax.swing.JButton();
-    tweakButton = new javax.swing.JButton();
     urlScrollPane = new javax.swing.JScrollPane();
     urlText = new javax.swing.JTextArea();
     tagsLabel = new javax.swing.JLabel();
@@ -2147,68 +2162,6 @@ public class URLMainFrame extends javax.swing.JFrame
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
     linkPanel.add(titleText, gridBagConstraints);
-
-    urlButton.setText("URL");
-    urlButton.setToolTipText("Click here to select a local file to be launched.");
-    urlButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    urlButton.setMaximumSize(new java.awt.Dimension(120, 24));
-    urlButton.setMinimumSize(new java.awt.Dimension(70, 24));
-    urlButton.setPreferredSize(new java.awt.Dimension(70, 24));
-    urlButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        urlButtonActionPerformed(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.weighty = 0.1;
-    gridBagConstraints.insets = new java.awt.Insets(8, 0, 2, 0);
-    linkPanel.add(urlButton, gridBagConstraints);
-
-    urlLaunchButton.setBackground(new java.awt.Color(51, 51, 51));
-    urlLaunchButton.setFont(new java.awt.Font("Zapf Dingbats", 0, 13)); // NOI18N
-    urlLaunchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/powersurgepub/urlunion/right-arrow.png"))); // NOI18N
-    urlLaunchButton.setToolTipText("Open the URL in your Web browser");
-    urlLaunchButton.setBorderPainted(false);
-    urlLaunchButton.setContentAreaFilled(false);
-    urlLaunchButton.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-    urlLaunchButton.setIconTextGap(0);
-    urlLaunchButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    urlLaunchButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        urlLaunchButtonActionPerformed(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-    gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
-    linkPanel.add(urlLaunchButton, gridBagConstraints);
-
-    tweakButton.setText("Tweak");
-    tweakButton.setToolTipText("Click here to tweak the link.");
-    tweakButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    tweakButton.setMaximumSize(new java.awt.Dimension(120, 24));
-    tweakButton.setMinimumSize(new java.awt.Dimension(70, 24));
-    tweakButton.setPreferredSize(new java.awt.Dimension(70, 24));
-    tweakButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        tweakButtonActionPerformed(evt);
-      }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 4;
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.weighty = 0.1;
-    gridBagConstraints.insets = new java.awt.Insets(2, 0, 4, 0);
-    linkPanel.add(tweakButton, gridBagConstraints);
 
     urlText.setColumns(20);
     urlText.setLineWrap(true);
@@ -2665,10 +2618,6 @@ private void priorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN
   priorURL();
 }//GEN-LAST:event_priorMenuItemActionPerformed
 
-private void urlLaunchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urlLaunchButtonActionPerformed
-  openURL (urlText.getText());
-}//GEN-LAST:event_urlLaunchButtonActionPerformed
-
 private void helpSoftwareUpdatesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpSoftwareUpdatesMenuItemActionPerformed
   programVersion.informUserIfNewer();
   programVersion.informUserIfLatest();
@@ -2727,36 +2676,9 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
     startReplace();
   }//GEN-LAST:event_replaceMenuItemActionPerformed
 
-  private void urlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_urlButtonActionPerformed
-    // cleanWebPage();
-    // td.openURL (itemWebPageText.getText().trim());
-    XFileChooser chooser = new XFileChooser ();
-    chooser.setDialogTitle ("Select File or Folder as URL");
-    chooser.setFileSelectionMode(XFileChooser.FILES_AND_DIRECTORIES);
-    String syncFolderStr = null;
-    File syncFolder = null;
-    File homeDir = Home.getShared().getUserHome();
-    if (homeDir != null) {
-      chooser.setCurrentDirectory (homeDir);
-    }
-    File result = chooser.showOpenDialog (this);
-    if (result != null) {
-      try {
-        String webPage = result.toURI().toURL().toString();
-        urlText.setText (webPage);
-      } catch (MalformedURLException e) {
-        // do nothing
-      }
-    }
-  }//GEN-LAST:event_urlButtonActionPerformed
-
   private void clearMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearMenuItemActionPerformed
     clearFile();
   }//GEN-LAST:event_clearMenuItemActionPerformed
-
-  private void tweakButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tweakButtonActionPerformed
-    tweakURL();
-  }//GEN-LAST:event_tweakButtonActionPerformed
 
 
 
@@ -2819,12 +2741,9 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JMenuItem toolsOptionsMenuItem;
   private javax.swing.JPanel treePanel;
   private javax.swing.JScrollPane treeScrollPane;
-  private javax.swing.JButton tweakButton;
-  private javax.swing.JButton urlButton;
   private javax.swing.JButton urlDeleteButton;
   private javax.swing.JButton urlFirstButton;
   private javax.swing.JButton urlLastButton;
-  private javax.swing.JButton urlLaunchButton;
   private javax.swing.JButton urlNewButton;
   private javax.swing.JButton urlNextButton;
   private javax.swing.JButton urlOKButton;
