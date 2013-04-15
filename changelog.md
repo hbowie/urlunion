@@ -1,4 +1,4 @@
-Version 2.00 (2013-02-22)
+Version 2.00 (2013-04-14)
 -------------------------
 
 * URL Union is now open source software, licensed under Apache License 2.0.

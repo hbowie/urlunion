@@ -2,7 +2,7 @@
 <twodue>
   <header>
     <file>
-      /Users/hbowie/Sites/powersurgepub/docs/changes/urlunion changes
+      /Users/hbowie/Java/projects/nbproj/urlunion/twodue
     </file>
     <primary>
       false
@@ -44,7 +44,7 @@
       low
     </undated>
     <template>
-      /Users/hbowie/Sites/powersurgepub/docs/changes/urlunion changes/template.html
+      /Users/hbowie/Java/projects/nbproj/urlunion/twodue/publish.tcz
     </template>
     <publishwhen>
       0
@@ -862,7 +862,7 @@
       
     </Tag5>
     <duedate>
-      02/22/2013
+      04/14/2013
     </duedate>
     <starttime>
       00:00 AM
@@ -910,7 +910,7 @@
       -1
     </recurswithinmonth>
     <duedateymd>
-      2013-02-22
+      2013-04-14
     </duedateymd>
     <type>
       Action
@@ -948,7 +948,7 @@
       
     </Tag5>
     <duedate>
-      02/22/2013
+      04/14/2013
     </duedate>
     <starttime>
       00:00 AM
@@ -996,7 +996,7 @@
       -1
     </recurswithinmonth>
     <duedateymd>
-      2013-02-22
+      2013-04-14
     </duedateymd>
     <type>
       Action
@@ -1034,7 +1034,7 @@
       
     </Tag5>
     <duedate>
-      02/22/2013
+      04/14/2013
     </duedate>
     <starttime>
       00:00 AM
@@ -1082,7 +1082,7 @@
       -1
     </recurswithinmonth>
     <duedateymd>
-      2013-02-22
+      2013-04-14
     </duedateymd>
     <type>
       Action
