@@ -285,6 +285,8 @@ public class URLMainFrame extends javax.swing.JFrame
       true,    // browserLauncher2Used,
       true,    // jxlUsed,
       false,   // pegdownUsed,
+      false,   // xerces used
+      false,   // saxon used
       "2009"); // copyRightYearFrom
         
 
