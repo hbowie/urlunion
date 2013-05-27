@@ -45,7 +45,6 @@ public class URLMainFrame extends javax.swing.JFrame
       ActionListener,
       AppToBackup,
       TagsChangeAgent,
-      FileOpener,
       FileSpecOpener,
       PublishAssistant,
       URLValidationRegistrar,
