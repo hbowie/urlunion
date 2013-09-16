@@ -112,6 +112,7 @@ public class URLMainFrame extends javax.swing.JFrame
   private             PrefsWindow         prefsWindow;
   private             RecentFiles         recentFiles;
   private             FilePrefs           filePrefs;
+  private             WebPrefs            webPrefs;
 
   // GUI Elements
   private             TextSelector        tagsTextSelector;
@@ -127,7 +128,7 @@ public class URLMainFrame extends javax.swing.JFrame
   private             FileSpec            currentFileSpec = null;
   private             File                urlFile = null;
   private             File                currentDirectory;
-  private             URLInputOutput      io = new URLInputOutput();
+  private             URLInputOutput      io;
 
   public  static final String             FIND = "Find";
   public  static final String             FIND_AGAIN = "Again";
@@ -197,12 +198,16 @@ public class URLMainFrame extends javax.swing.JFrame
     userPrefs = UserPrefs.getShared();
     prefsWindow = new PrefsWindow (this);
     
+    webPrefs = prefsWindow.getWebPrefs();
+    
     filePrefs = new FilePrefs(this);
     filePrefs.loadFromPrefs();
     prefsWindow.setFilePrefs(filePrefs);
     
     tweakerPrefs = new TweakerPrefs();
     prefsWindow.getPrefsTabs().add(TweakerPrefs.PREFS_TAB_NAME, tweakerPrefs);
+    
+    io = new URLInputOutput(this);
     
     recentFiles = new RecentFiles();
     
@@ -802,6 +807,10 @@ public class URLMainFrame extends javax.swing.JFrame
     }
 
     return found;
+  }
+  
+  public WebPrefs getWebPrefs() {
+    return webPrefs;
   }
   
   public String getLastTextFound() {

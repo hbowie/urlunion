@@ -33,6 +33,8 @@ package com.powersurgepub.urlunion;
  */
 public class URLInputOutput {
   
+  private             URLMainFrame mainFrame;
+  
   private             FavoritesPrefs favoritesPrefs = null;
   private             String      favoritesHome = "";
 
@@ -77,8 +79,8 @@ public class URLInputOutput {
   private     int                 lineMax   = 30;
   private     int                 columnCount = 0;
 
-  public URLInputOutput () {
-
+  public URLInputOutput (URLMainFrame mainFrame) {
+    this.mainFrame = mainFrame;
   }
 
   /* ----------------------------------------------------------------
@@ -1177,9 +1179,20 @@ public class URLInputOutput {
   	  writeScriptSrc ("javascript/detect.js");
       writeScriptSrc ("javascript/outlineinit.js");
     }
-    writeStyleSheetLink 
-        ("http://fonts.googleapis.com/css?family=Merriweather+Sans:400,700");
+    String cssHref = mainFrame.getWebPrefs().getCSShref();
+    if (cssHref != null && cssHref.length() > 0) {
+      writeStyleSheetLink (cssHref);
+    }
+    beginStartTag (TextType.STYLE);
+    addAttribute (TextType.TYPE, TextType.TEXT_CSS);
+    finishStartTag(TextType.STYLE);
+    writeLine ("      body, p, h1, li {");
+    writeLine ("        font-family: '" + mainFrame.getWebPrefs().getFontFamily() + "';");
+    writeLine ("        font-size: " + mainFrame.getWebPrefs().getFontSize() + ";");
+    writeLine ("      }");
+    writeEndTag (TextType.STYLE);
     writeStyleSheetLink ("css/styles.css");
+
     writeLine ("    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->");
     writeLine ("    <!--[if lt IE 9]>");
     writeScriptSrc ("http://html5shim.googlecode.com/svn/trunk/html5.js");

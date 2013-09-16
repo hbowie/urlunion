@@ -39,6 +39,7 @@ public class PrefsWindow
   private boolean           setupComplete = false;
   
   private CommonPrefs       commonPrefs;
+  private WebPrefs          webPrefs;
   private FavoritesPrefs    favoritesPrefs;
   private FilePrefs         filePrefs = null;
   
@@ -54,6 +55,9 @@ public class PrefsWindow
     commonPrefs = CommonPrefs.getShared();
     prefsTabs.addTab("General", commonPrefs);
     
+    webPrefs = new WebPrefs (mainFrame);
+    prefsTabs.addTab("Web", webPrefs);
+    
     favoritesPrefs = new FavoritesPrefs (mainFrame);
     prefsTabs.addTab("Favorites", favoritesPrefs);
     
@@ -67,10 +71,15 @@ public class PrefsWindow
 
   public void savePrefs() {
     commonPrefs.savePrefs();
+    webPrefs.savePrefs();
     favoritesPrefs.savePrefs();
     if (filePrefs != null) {
       filePrefs.savePrefs();
     }
+  }
+  
+  public WebPrefs getWebPrefs() {
+    return webPrefs;
   }
 
   public FavoritesPrefs getFavoritesPrefs() {
