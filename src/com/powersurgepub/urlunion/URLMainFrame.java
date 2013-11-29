@@ -24,7 +24,6 @@ package com.powersurgepub.urlunion;
   import com.powersurgepub.psutils.*;
   import com.powersurgepub.urlvalidator.*;
   import com.powersurgepub.xos2.*;
-  import edu.stanford.ejalbert.*;
   import java.awt.*;
   import java.awt.event.*;
   import java.io.*;

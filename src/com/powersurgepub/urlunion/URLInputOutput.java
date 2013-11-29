@@ -1043,7 +1043,7 @@ public class URLInputOutput {
           markupWriter.write (node.toString());
           markupWriter.endXML (
               TextType.HEADING_3.toUpperCase(),
-              false, true);
+              false, true, true);
           markupWriter.startXML("DL", "", true, false, false);
           markupWriter.startXML("p", "", false, true, false);
           // markupWriter.moreIndent();
