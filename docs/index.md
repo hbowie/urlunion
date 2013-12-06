@@ -59,8 +59,6 @@ limitations under the License.
 
 URL Union also incorporates or adapts the following open source software libraries. 
 
-* BrowserLauncher2 &#8212; Copyright 2004 - 2007 Markus Gebhard, Jeff Chapman, used under the terms of the [GNU General Public License][gnu]. 
-
 * JExcelAPI &#8212; Copyright 2002 Andrew Khan, used under the terms of the [GNU General Public License][gnu]. 
 
 <h2 id="installation">Installation</h2>

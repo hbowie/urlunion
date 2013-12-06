@@ -285,7 +285,6 @@ public class URLMainFrame extends javax.swing.JFrame
 
     aboutWindow = new AboutWindow(
       false,   // loadFromDisk, 
-      true,    // browserLauncher2Used,
       true,    // jxlUsed,
       false,   // pegdownUsed,
       false,   // xerces used
