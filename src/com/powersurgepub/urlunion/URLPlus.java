@@ -19,6 +19,8 @@ package com.powersurgepub.urlunion;
   import com.powersurgepub.psdatalib.pstags.*;
   import com.powersurgepub.psdatalib.txbio.*;
   import com.powersurgepub.urlvalidator.*;
+  import java.text.*;
+  import java.util.*;
 
 /**
   A class representing a URL and some associated metadata.
@@ -27,6 +29,22 @@ public class URLPlus
     implements Comparable, Taggable, ItemWithURL {
   
   public static final boolean SLASH_TO_SEPARATE = false;
+  
+  public final static String   YMD_FORMAT_STRING = "yyyy-MM-dd";
+  public final static String   MDY_FORMAT_STRING = "MM-dd-yyyy";
+  public final static String   STANDARD_FORMAT_STRING 
+      = "yyyy-MM-dd'T'HH:mm:ssz";
+  public final static String   
+      COMPLETE_FORMAT_STRING = "EEEE MMMM d, yyyy KK:mm:ss aa zzz";
+  
+  public final static DateFormat YMD_FORMAT 
+      = new SimpleDateFormat (YMD_FORMAT_STRING);
+  public final static DateFormat MDY_FORMAT
+      = new SimpleDateFormat (MDY_FORMAT_STRING);
+  public final static DateFormat COMPLETE_FORMAT
+      = new SimpleDateFormat (COMPLETE_FORMAT_STRING);
+  public final static DateFormat STANDARD_FORMAT
+      = new SimpleDateFormat (STANDARD_FORMAT_STRING);
 
   private String   urlPart1 = "http://";
   private String   urlPart2 = "www.";
@@ -34,15 +52,16 @@ public class URLPlus
   private String   urlPart4 = "";
   private String   urlPart5 = "";
   private String   title = "";
-  private String   comments = "";;
+  private String   comments = "";
   private Tags     tags = new Tags(SLASH_TO_SEPARATE);
+  private Date     lastModDate;
   private int      noResponseCount = 0;
   private TagsNode tagsNode = null;
 
   private TagsIterator iterator = new TagsIterator (tags);
 
   public URLPlus () {
-
+    setLastModDateToday();
   }
   
   /**
@@ -167,10 +186,6 @@ public class URLPlus
         urlPart4 = urlString.substring (i, urlString.length());
       }
     }
-    // System.out.println ("url = " + urlPart1 + " + "
-    //     + urlPart2 + " + "
-    //     + urlPart3 + " + "
-    //     + urlPart4);
   } // end setURL method
 
   public String getURL () {
@@ -387,6 +402,90 @@ public class URLPlus
   public TagsNode getTagsNode () {
     return tagsNode;
   }
+  
+  public void setLastModDateStandard (String date) {
+    setLastModDate (STANDARD_FORMAT, date);
+  }
+    
+  public void setLastModDateYMD (String date) {
+    setLastModDate (YMD_FORMAT, date);
+  }
+  
+  /**
+     Sets the last mod date for this item.
+ 
+     @param  fmt  A DateFormat instance to be used to parse the following string.
+     @param  date String representation of a date.
+   */
+  public void setLastModDate (DateFormat fmt, String date) {
+    
+    try {
+      setLastModDate (fmt.parse (date));
+    } catch (ParseException e) {
+      System.out.println ("URLPlus.setLastModDate to " + date + " with " + fmt
+          + " -- Parse Exception");
+    }
+
+  } // end method
+  
+  /**
+    Sets the last mod date to today's date. 
+   */
+  public void setLastModDateToday () {
+    setLastModDate (new GregorianCalendar().getTime());
+  }
+  
+  /**
+     Sets the due date for this item.
+ 
+     @param  date Date representation of a date.
+   */
+  public void setLastModDate (Date date) {
+    
+    lastModDate = date;
+
+  } // end method
+  
+  /**
+     Gets the due date for this item, formatted as a string.
+ 
+     @return  String representation of a date.
+     @param   fmt  A DateFormat instance to be used to format the date as a string.
+
+   */
+  public String getLastModDate (DateFormat fmt) {
+    
+    return fmt.format (lastModDate);
+
+  } // end method
+  
+  /**
+     Gets the due date for this item, formatted as a string 
+     in yyyy/mm/dd format.
+ 
+     @return  String representation of a date in yyyy/mm/dd format.
+   */
+  public String getLastModDateYMD () {
+    
+    return YMD_FORMAT.format (lastModDate);
+
+  } // end method
+  
+  public String getLastModDateStandard () {
+    
+    return STANDARD_FORMAT.format (lastModDate);
+  }
+  
+  /**
+     Gets the due date for this item.
+ 
+     @return  date Date representation of a date.
+   */
+  public Date getLastModDate () {
+    
+    return lastModDate;
+
+  } // end method
 
   public String toString () {
     return title;

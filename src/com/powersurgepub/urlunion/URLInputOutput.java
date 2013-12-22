@@ -43,6 +43,7 @@ public class URLInputOutput {
   private             String      favoritesColumnClass = "span3";
 
   public static final String      TAGS        = "tags";
+  public static final String      MOD_DATE    = "mod-date";
   public static final String      FAVORITES   = "favorites";
 
   public static final String      BOOKMARKS   = "Bookmarks";
@@ -63,6 +64,7 @@ public class URLInputOutput {
   private     DataSource          dataSource;        
   private     StringBuffer        textIn = new StringBuffer();
   private     boolean             defForTags = false;
+  private     boolean             defForModDate = false;
   private     URLCollection       urls;
   private     URLPlus             url = new URLPlus();
   private     StringBuffer        tags = new StringBuffer();
@@ -197,7 +199,12 @@ public class URLInputOutput {
         // Tags or Comments
         if (defForTags) {
           url.setTags (textIn.toString());
-        } else {
+        } 
+        else
+        if (defForModDate) {
+          url.setLastModDateStandard(textIn.toString());
+        }
+        else {
           String trimmedComments = textIn.toString().trim();
           if (trimmedComments.length() == 0
               || trimmedComments.equalsIgnoreCase("missing value")) {
@@ -234,6 +241,7 @@ public class URLInputOutput {
       if (htmlTag.getName().equals (TextType.DEFINITION_DEF)) {
         HTMLAttribute attr = htmlTag.getAttribute (TextType.CLASS);
         defForTags = (attr != null && attr.getValue().equals (TAGS));
+        defForModDate = (attr != null && attr.getValue().equals (MOD_DATE));
       } // end if DD tag
     } // end if beginning tab
   } // end method processHTMLTag
@@ -283,6 +291,11 @@ public class URLInputOutput {
                   || column.getCommonFormOfName().contains("notes"))
                   && (url.getComments().length() == 0)) {
                 url.setComments(column.getData());
+              }
+              else
+              if (column.getCommonFormOfName().contains ("mod")
+                  && column.getCommonFormOfName().contains("date")) {
+                url.setLastModDateStandard(column.getData());
               }
             } // end if column not null
           } // end while row has more columns to consider
@@ -378,6 +391,10 @@ public class URLInputOutput {
     writeStartTag (TextType.DEFINITION_DEF);
     writeContent (nextURL.getComments());
     writeEndTag   (TextType.DEFINITION_DEF);
+    
+    writeStartTag (TextType.DEFINITION_DEF, MOD_DATE);
+    writeContent  (nextURL.getLastModDateStandard());
+    writeEndTag   (TextType.DEFINITION_DEF);
 
   }
   
@@ -407,6 +424,7 @@ public class URLInputOutput {
     recDef.addColumn ("URL");
     recDef.addColumn ("Tags");
     recDef.addColumn ("Comments");
+    recDef.addColumn ("Last Mod Date");
     try {
       tdf.openForOutput (recDef);
     } catch (java.io.IOException e) {
@@ -482,6 +500,7 @@ public class URLInputOutput {
               rec.addField(recDef, url.getTagsAsString());
             }
             rec.addField(recDef, url.getComments());
+            rec.addField(recDef, url.getLastModDateStandard());
             try {
               tdf.nextRecordOut(rec);
             } catch (java.io.IOException e) {

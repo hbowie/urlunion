@@ -985,6 +985,7 @@ public class URLMainFrame extends javax.swing.JFrame
     urlText.setText (url.getURL());
     tagsTextSelector.setText (url.getTagsAsString());
     commentsText.setText (url.getComments());
+    lastModDateText.setText (url.getLastModDateStandard());
     statusBar.setPosition(position.getIndexForDisplay(), urls.size());
     modified = false;
   }
@@ -1020,6 +1021,7 @@ public class URLMainFrame extends javax.swing.JFrame
     }
     
     if (modified) {
+      url.setLastModDateToday();
       setUnsavedChanges(true);
       if (position.isNewURL()) {
         if (url.hasURL()) {
@@ -1896,6 +1898,8 @@ public class URLMainFrame extends javax.swing.JFrame
     commentsLabel = new javax.swing.JLabel();
     commentsScrollPane = new javax.swing.JScrollPane();
     commentsText = new javax.swing.JTextArea();
+    lastModDateLabel = new javax.swing.JLabel();
+    lastModDateText = new javax.swing.JLabel();
     mainMenuBar = new javax.swing.JMenuBar();
     fileMenu = new javax.swing.JMenu();
     fileNewMenuItem = new javax.swing.JMenuItem();
@@ -2228,6 +2232,27 @@ public class URLMainFrame extends javax.swing.JFrame
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(8, 8, 8, 8);
     linkPanel.add(commentsScrollPane, gridBagConstraints);
+
+    lastModDateLabel.setLabelFor(commentsText);
+    lastModDateLabel.setText("Mod Date:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 8;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(4, 8, 4, 4);
+    linkPanel.add(lastModDateLabel, gridBagConstraints);
+
+    lastModDateText.setLabelFor(commentsText);
+    lastModDateText.setText("  ");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 8;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 8);
+    linkPanel.add(lastModDateText, gridBagConstraints);
 
     mainSplitPane.setRightComponent(linkPanel);
 
@@ -2729,6 +2754,8 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JPopupMenu.Separator jSeparator6;
   private javax.swing.JSeparator jSeparator7;
   private javax.swing.JSeparator jSeparator8;
+  private javax.swing.JLabel lastModDateLabel;
+  private javax.swing.JLabel lastModDateText;
   private javax.swing.JButton launchButton;
   private javax.swing.JPanel linkPanel;
   private javax.swing.JMenu listMenu;
