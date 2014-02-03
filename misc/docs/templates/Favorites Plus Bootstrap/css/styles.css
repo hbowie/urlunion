@@ -25,23 +25,23 @@ p.favorites
 	font-family: 'Merriweather Sans', Lucida Sans Unicode, Lucida Grande, sans-serif;
 	font-size: 10pt;
 	margin-top: 0pt;
-	margin-bottom: 4pt;
+	margin-bottom: 4pt; 
 }
 
 td.favorites { vertical-align: top; }
 
-.favorites a:link
+a:link
 {
 	text-decoration: none;
 	color: #004080;
 }
-.favorites a:visited
+a:visited
 {
 	text-decoration: none;
 	color: #400080;
 }
-.favorites a:hover   { text-decoration: underline; }
-.favorites a:active  { text-decoration: underline; }
+a:hover   { text-decoration: underline; }
+a:active  { text-decoration: underline; }
 
 .outliner { 
     /* padding: .75em 2em .75em 2em; 
@@ -55,7 +55,7 @@ td.favorites { vertical-align: top; }
     padding-top: .25em; 
 }
 .outliner li { 
-    font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
+    font-family: 'Merriweather Sans', Lucida Sans Unicode, Lucida Grande, sans-serif;
 	  font-size: 10pt;
     padding: .15em;
     margin-left: -16px; 
