@@ -20,6 +20,7 @@ package com.powersurgepub.urlunion;
   import com.powersurgepub.psfiles.*;
   import com.powersurgepub.psdatalib.ui.*;
   import com.powersurgepub.psdatalib.pstags.*;
+  import com.powersurgepub.psdatalib.notenik.*;
   import com.powersurgepub.pspub.*;
   import com.powersurgepub.psutils.*;
   import com.powersurgepub.urlvalidator.*;
@@ -1285,6 +1286,47 @@ public class URLMainFrame extends javax.swing.JFrame
     urls.fireTableDataChanged();
     firstURL();
   }
+  
+  private void exportToNoteNik() {
+    fileChooser.setDialogTitle ("Export to NoteNik");
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    File selectedFile = fileChooser.showSaveDialog(this);
+    if (selectedFile != null
+        && selectedFile.isDirectory()
+        && selectedFile.canWrite()) {
+      File exportFolder = selectedFile;
+      NoteWriter writer = new NoteWriter(exportFolder);
+      URLPlus workURL;
+      Note workNote;
+      try {
+        for (int workIndex = 0; workIndex < urls.size(); workIndex++) {
+          workURL = urls.get (workIndex);
+          workNote = new Note (workURL.getTitle(), workURL.getComments());
+          workNote.setTags(workURL.getTagsAsString());
+          workNote.setLink(workURL.getURL());
+          writer.save (workNote, false);
+        }
+        JOptionPane.showMessageDialog(this,
+              String.valueOf(urls.size()) + " URLs exported successfully to"
+                + GlobalConstants.LINE_FEED
+                + selectedFile.toString(),
+              "Export Results",
+              JOptionPane.INFORMATION_MESSAGE,
+              Home.getShared().getIcon());
+          logger.recordEvent (LogEvent.NORMAL, String.valueOf(urls.size()) 
+              + " URLs exported as minutes to " 
+              + selectedFile.toString(),
+              false);
+          statusBar.setStatus(String.valueOf(urls.size()) 
+            + " URLs exported");
+      } catch (IOException e) {
+        Trouble.getShared().report(this, 
+            "I/O Error exporting to NoteNik format", 
+            "I/O Error", 
+            JOptionPane.ERROR_MESSAGE);
+      }
+    } // end if user selected a valid folder
+  } // end method export to NoteNik
 
   private void readFileContents (File inFile) {
     io.read (inFile, urls);
@@ -1919,6 +1961,8 @@ public class URLMainFrame extends javax.swing.JFrame
     fileBackupMenuItem = new javax.swing.JMenuItem();
     jSeparator5 = new javax.swing.JSeparator();
     importMenuItem = new javax.swing.JMenuItem();
+    exportMenu = new javax.swing.JMenu();
+    exportNoteNikMenuItem = new javax.swing.JMenuItem();
     editMenu = new javax.swing.JMenu();
     deleteMenuItem = new javax.swing.JMenuItem();
     listMenu = new javax.swing.JMenu();
@@ -2361,6 +2405,18 @@ public class URLMainFrame extends javax.swing.JFrame
     });
     fileMenu.add(importMenuItem);
 
+    exportMenu.setText("Export");
+
+    exportNoteNikMenuItem.setText("NoteNik...");
+    exportNoteNikMenuItem.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        exportNoteNikMenuItemActionPerformed(evt);
+      }
+    });
+    exportMenu.add(exportNoteNikMenuItem);
+
+    fileMenu.add(exportMenu);
+
     mainMenuBar.add(fileMenu);
 
     editMenu.setText("Edit");
@@ -2719,6 +2775,10 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
     clearFile();
   }//GEN-LAST:event_clearMenuItemActionPerformed
 
+  private void exportNoteNikMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportNoteNikMenuItemActionPerformed
+    exportToNoteNik();
+  }//GEN-LAST:event_exportNoteNikMenuItemActionPerformed
+
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2731,6 +2791,8 @@ private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) 
   private javax.swing.JTextArea commentsText;
   private javax.swing.JMenuItem deleteMenuItem;
   private javax.swing.JMenu editMenu;
+  private javax.swing.JMenu exportMenu;
+  private javax.swing.JMenuItem exportNoteNikMenuItem;
   private javax.swing.JMenuItem fileBackupMenuItem;
   private javax.swing.JMenu fileMenu;
   private javax.swing.JMenuItem fileNewMenuItem;
