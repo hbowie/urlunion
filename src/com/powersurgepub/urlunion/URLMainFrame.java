@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2009 - 2013 Herb Bowie
  *
@@ -19,8 +20,10 @@ package com.powersurgepub.urlunion;
   import com.powersurgepub.linktweaker.*;
   import com.powersurgepub.psfiles.*;
   import com.powersurgepub.psdatalib.ui.*;
+  import com.powersurgepub.psdatalib.psdata.*;
   import com.powersurgepub.psdatalib.pstags.*;
   import com.powersurgepub.psdatalib.notenik.*;
+  import com.powersurgepub.psdatalib.txbio.*;
   import com.powersurgepub.pspub.*;
   import com.powersurgepub.psutils.*;
   import com.powersurgepub.urlvalidator.*;
@@ -1294,17 +1297,28 @@ public class URLMainFrame extends javax.swing.JFrame
     if (selectedFile != null
         && selectedFile.isDirectory()
         && selectedFile.canWrite()) {
+      MarkupEntityTranslator translator 
+          = MarkupEntityTranslator.getSharedInstance();
       File exportFolder = selectedFile;
-      NoteWriter writer = new NoteWriter(exportFolder);
+      NoteIO noteIO = new NoteIO(exportFolder);
       URLPlus workURL;
       Note workNote;
+      DataDictionary dict = new DataDictionary();
+      RecordDefinition recDef = new RecordDefinition(dict);
       try {
         for (int workIndex = 0; workIndex < urls.size(); workIndex++) {
           workURL = urls.get (workIndex);
-          workNote = new Note (workURL.getTitle(), workURL.getComments());
-          workNote.setTags(workURL.getTagsAsString());
+          workNote = new Note();
+          String title = translator.translateFromMarkup(workURL.getTitle());
+          workNote.setTitle(title);
           workNote.setLink(workURL.getURL());
-          writer.save (workNote, false);
+          workNote.setTags(workURL.getTags().toString());
+          String body = translator.translateFromMarkup(workURL.getComments());
+          if (body.length() > 0) {
+            workNote.setBody(body);
+          }
+          // System.out.println("- exporting " + title + " to " + workNote.getFileName());
+          noteIO.save (workNote, false);
         }
         JOptionPane.showMessageDialog(this,
               String.valueOf(urls.size()) + " URLs exported successfully to"
@@ -1314,7 +1328,7 @@ public class URLMainFrame extends javax.swing.JFrame
               JOptionPane.INFORMATION_MESSAGE,
               Home.getShared().getIcon());
           logger.recordEvent (LogEvent.NORMAL, String.valueOf(urls.size()) 
-              + " URLs exported as minutes to " 
+              + " URLs exported as Notes to " 
               + selectedFile.toString(),
               false);
           statusBar.setStatus(String.valueOf(urls.size()) 
