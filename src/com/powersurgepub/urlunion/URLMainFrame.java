@@ -1300,15 +1300,19 @@ public class URLMainFrame extends javax.swing.JFrame
       MarkupEntityTranslator translator 
           = MarkupEntityTranslator.getSharedInstance();
       File exportFolder = selectedFile;
-      NoteIO noteIO = new NoteIO(exportFolder);
-      URLPlus workURL;
-      Note workNote;
       DataDictionary dict = new DataDictionary();
       RecordDefinition recDef = new RecordDefinition(dict);
+      recDef.addColumn(Note.TITLE_DEF);
+      recDef.addColumn(Note.TAGS_DEF);
+      recDef.addColumn(Note.LINK_DEF);
+      recDef.addColumn(Note.BODY_DEF);
+      NoteIO noteIO = new NoteIO(recDef, exportFolder);
+      URLPlus workURL;
+      Note workNote;
       try {
         for (int workIndex = 0; workIndex < urls.size(); workIndex++) {
           workURL = urls.get (workIndex);
-          workNote = new Note();
+          workNote = new Note(recDef);
           String title = translator.translateFromMarkup(workURL.getTitle());
           workNote.setTitle(title);
           workNote.setLink(workURL.getURL());
