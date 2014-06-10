@@ -2741,19 +2741,11 @@ private void submitFeedbackMenuItemActionPerformed(java.awt.event.ActionEvent ev
 }//GEN-LAST:event_submitFeedbackMenuItemActionPerformed
 
 private void userGuideMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userGuideMenuItemActionPerformed
-  File userGuideFile = new File (appFolder, "urlunion.html");
-  try {
-    URI userGuideURI = userGuideFile.toURI();
-    URL userGuideURL = userGuideURI.toURL();
-    openURL(userGuideURL.toString());
-  }
-  catch (MalformedURLException e) {
-    trouble.report("Trouble opening the User Guide", "User Guide Problem");
-  }
+  Home.getShared().openUserGuide();
 }//GEN-LAST:event_userGuideMenuItemActionPerformed
 
 private void webMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_webMenuItemActionPerformed
-  openURL ("http://www.powersurgepub.com/products/urlunion.html");
+  Home.getShared().openHomePage();
 }//GEN-LAST:event_webMenuItemActionPerformed
 
 private void toolsOptionsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolsOptionsMenuItemActionPerformed
@@ -2770,15 +2762,7 @@ private void publishWindowMenuItemActionPerformed(java.awt.event.ActionEvent evt
 }//GEN-LAST:event_publishWindowMenuItemActionPerformed
 
 private void helpHistoryMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpHistoryMenuItemActionPerformed
-  File historyFile = new File (appFolder, "versions.html");
-  try {
-    URI historyURI = historyFile.toURI();
-    URL historyURL = historyURI.toURL();
-    openURL(historyURL.toString());
-  }
-  catch (MalformedURLException e) {
-    trouble.report("Trouble opening the Program History", "Program History Problem");
-  }
+  Home.getShared().openProgramHistory();
 }//GEN-LAST:event_helpHistoryMenuItemActionPerformed
 
   private void publishNowMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_publishNowMenuItemActionPerformed
