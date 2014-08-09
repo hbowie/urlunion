@@ -1523,39 +1523,6 @@ public class URLMainFrame extends javax.swing.JFrame
 
   }
 
-  /**
-   Publish URLs in a variety of useful formats.
-   */
-  private void publishFile () {
-    // reloadFile();
-    if (currentDirectory != null
-        && currentDirectory.exists()
-        && currentDirectory.isDirectory()) {
-
-      // Copy Support folder if it doesn't already exist
-      File supportFolder = new File (currentDirectory, SUPPORT_FOLDER_NAME);
-      File appSubFolder = new File (appFolder, SUPPORT_FOLDER_NAME);
-      if (appFolder.exists() && (! supportFolder.exists())) {
-        System.out.println ("initFolder");
-        System.out.println ("  from " + appSubFolder.toString());
-        System.out.println ("  to   " + supportFolder.toString());
-        FileUtils.copyFolder (appSubFolder, supportFolder);
-      }
-
-      // Publish selected favorites
-      publishFavorites(currentDirectory);
-
-      // Publish in Netscape bookmarks format
-      publishNetscape(currentDirectory);
-
-      // Publish in outline form using dynamic html
-      publishOutline(currentDirectory);
-
-      // Publish index file pointing to other files
-      publishIndex(currentDirectory);
-    }
-  }
-
   private boolean publishURLUnion (File publishTo) {
     urlUnionWritten = false;
     File urlUnionFile = new File (publishTo, DEFAULT_FILE_NAME);
