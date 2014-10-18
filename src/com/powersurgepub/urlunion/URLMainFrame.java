@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2009 - 2013 Herb Bowie
+ * Copyright 2009 - 2014 Herb Bowie
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1304,10 +1304,10 @@ public class URLMainFrame extends javax.swing.JFrame
       File exportFolder = selectedFile;
       DataDictionary dict = new DataDictionary();
       RecordDefinition recDef = new RecordDefinition(dict);
-      recDef.addColumn(Note.TITLE_DEF);
-      recDef.addColumn(Note.TAGS_DEF);
-      recDef.addColumn(Note.LINK_DEF);
-      recDef.addColumn(Note.BODY_DEF);
+      recDef.addColumn(NoteFactory.TITLE_DEF);
+      recDef.addColumn(NoteFactory.TAGS_DEF);
+      recDef.addColumn(NoteFactory.LINK_DEF);
+      recDef.addColumn(NoteFactory.BODY_DEF);
       NoteIO noteIO = new NoteIO(recDef, exportFolder);
       URLPlus workURL;
       Note workNote;
