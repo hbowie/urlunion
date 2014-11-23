@@ -1304,10 +1304,10 @@ public class URLMainFrame extends javax.swing.JFrame
       File exportFolder = selectedFile;
       DataDictionary dict = new DataDictionary();
       RecordDefinition recDef = new RecordDefinition(dict);
-      recDef.addColumn(NoteFactory.TITLE_DEF);
-      recDef.addColumn(NoteFactory.TAGS_DEF);
-      recDef.addColumn(NoteFactory.LINK_DEF);
-      recDef.addColumn(NoteFactory.BODY_DEF);
+      recDef.addColumn(NoteParms.TITLE_DEF);
+      recDef.addColumn(NoteParms.TAGS_DEF);
+      recDef.addColumn(NoteParms.LINK_DEF);
+      recDef.addColumn(NoteParms.BODY_DEF);
       NoteIO noteIO = new NoteIO(recDef, exportFolder);
       URLPlus workURL;
       Note workNote;
