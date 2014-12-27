@@ -17,6 +17,8 @@
 
 package com.powersurgepub.urlunion;
 
+import com.powersurgepub.psdatalib.psdata.widgets.LinkLabel;
+import com.powersurgepub.psdatalib.psdata.widgets.TextSelector;
   import com.powersurgepub.linktweaker.*;
   import com.powersurgepub.psfiles.*;
   import com.powersurgepub.psdatalib.ui.*;
