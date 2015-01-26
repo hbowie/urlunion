@@ -1,6 +1,6 @@
 
 /*
- * Copyright 2009 - 2014 Herb Bowie
+ * Copyright 2009 - 2015 Herb Bowie
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@
 
 package com.powersurgepub.urlunion;
 
-import com.powersurgepub.psdatalib.psdata.widgets.LinkLabel;
-import com.powersurgepub.psdatalib.psdata.widgets.TextSelector;
+
   import com.powersurgepub.linktweaker.*;
   import com.powersurgepub.psfiles.*;
-  import com.powersurgepub.psdatalib.ui.*;
-  import com.powersurgepub.psdatalib.psdata.*;
-  import com.powersurgepub.psdatalib.pstags.*;
   import com.powersurgepub.psdatalib.notenik.*;
+  import com.powersurgepub.psdatalib.psdata.*;
+  import com.powersurgepub.psdatalib.psdata.widgets.*;
+  import com.powersurgepub.psdatalib.pstags.*;
   import com.powersurgepub.psdatalib.txbio.*;
+  import com.powersurgepub.psdatalib.ui.*;
   import com.powersurgepub.pspub.*;
   import com.powersurgepub.psutils.*;
   import com.powersurgepub.urlvalidator.*;
@@ -1623,7 +1623,7 @@ public class URLMainFrame extends javax.swing.JFrame
     fileChooser.setCurrentDirectory (backupFolder);
     if (urlFile != null && urlFile.exists()) {
       fileChooser.setSelectedFile
-          (new File(backupFolder.toString() + xos.getPathSeparator()
+          (new File(backupFolder.toString() + File.separator
             + filePrefs.getBackupFileName(urlFile, urlFileName.getExt())));
     }
     File selectedFile = fileChooser.showSaveDialog (this);
@@ -1696,7 +1696,24 @@ public class URLMainFrame extends javax.swing.JFrame
     displayAuxiliaryWindow(linkTweaker);
   }
   
-  public void setTweakedLink (String tweakedLink, String linkID) {
+  /**
+   Get the current link so that it can be tweaked. 
+  
+   @return The Link to be tweaked. 
+  */
+  public String getLinkToTweak() {
+    return urlText.getText();
+  }
+  
+  /**
+   Set a link field to a new value after it has been tweaked. 
+  
+   @param tweakedLink The link after it has been tweaked. 
+   @param linkID      A string identifying the link, in case there are more
+                      than one. This would be the text used in the label
+                      for the link. 
+  */
+  public void putTweakedLink (String tweakedLink, String linkID) {
     if (tweakedLink.length() > 0) {
       urlText.setText(tweakedLink);
     }
