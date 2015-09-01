@@ -1310,7 +1310,7 @@ public class URLMainFrame extends javax.swing.JFrame
       recDef.addColumn(NoteParms.TAGS_DEF);
       recDef.addColumn(NoteParms.LINK_DEF);
       recDef.addColumn(NoteParms.BODY_DEF);
-      NoteIO noteIO = new NoteIO(recDef, exportFolder);
+      NoteIO noteIO = new NoteIO(exportFolder, NoteParms.DEFINED_TYPE, recDef);
       URLPlus workURL;
       Note workNote;
       try {
