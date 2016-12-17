@@ -113,7 +113,7 @@ public class PrefsWindow
   }// </editor-fold>//GEN-END:initComponents
 
 private void formComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentHidden
-  WindowMenuManager.getShared().hide(this);
+  WindowMenuManager.getShared().hideAndRemove(this);
 }//GEN-LAST:event_formComponentHidden
   
   
