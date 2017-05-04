@@ -54,7 +54,7 @@
     Improved formatting of Favorites page in several ways. Added two new user preferences, to specify the number of columns and the number of rows desired. Also modified the line-counting logic to fit as many complete sections as possible within a column, given the user's requested maximum number of lines.
 
 
-## Version .91 (2010-02-25)
+## Version 0.91 (2010-02-25)
 
 1. **Added Tools / Options Menu**
 
@@ -65,7 +65,7 @@
     Corrected a bug that caused the Browse Local Index to fail when running on Windows.
 
 
-## Version .90 (2009-12-30)
+## Version 0.90 (2009-12-30)
 
 1. **Initial Release of URL Union**
 
